@@ -319,7 +319,12 @@ require("lazy").setup({
 			"nvim-lualine/lualine.nvim",
 			dependencies = { "nvim-tree/nvim-web-devicons" },
 			config = function()
-				require("lualine").setup({})
+				require("lualine").setup({
+					options = {
+						--- @usage 'rose-pine' | 'rose-pine-alt'
+						theme = "rose-pine",
+					},
+				})
 			end,
 		},
 
@@ -366,8 +371,8 @@ require("lazy").setup({
 			"neovim/nvim-lspconfig",
 			dependencies = {
 				-- Automatically install LSPs and related tools to stdpath for Neovim
-				{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
-				"williamboman/mason-lspconfig.nvim",
+				{ "williamboman/mason.nvim", config = true, version = "1.11.0" }, -- NOTE: Must be loaded before dependants
+				{ "williamboman/mason-lspconfig.nvim", version = "1.32.0" },
 				"WhoIsSethDaniel/mason-tool-installer.nvim",
 
 				-- Useful status updates for LSP.
@@ -869,7 +874,7 @@ require("lazy").setup({
 	},
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
-	install = { colorscheme = { "cyberdream" } },
+	install = { colorscheme = { "rose-pine" } },
 	-- automatically check for plugin updates
 	checker = { enabled = true },
 })
@@ -905,3 +910,4 @@ vim.api.nvim_create_autocmd({ "VimLeave" }, {
 		vim.fn.system({ "wezterm", "cli", "set-tab-title", "Wezterm" })
 	end,
 })
+vim.api.nvim_set_hl(0, "Visual", { bg = "#444444" })
