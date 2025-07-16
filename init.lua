@@ -16,7 +16,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	end
 end
 vim.opt.rtp:prepend(lazypath)
-
 -- Make sure to setup `mapleader` and `maplocalleader` before
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
@@ -37,7 +36,7 @@ require("lazy").setup({
 					hide_fillchars = true, -- 隐藏fillchars ,比如md中的#
 					terminal_colors = true, -- 终端颜色
 					--cache = true, -- 缓存
-					borderless_telescope = { border = false, style = "flat" }, -- 无边框的telescope
+					borderless_telescope = { border = false, style = "flat" }, 
 					theme = {
 						variant = "default",
 						colors = {
@@ -292,17 +291,23 @@ require("lazy").setup({
 			dependencies = { { "nvim-tree/nvim-web-devicons" } },
 		},
 		{
+			"rcarriga/nvim-notify",
+			lazy = false,
+			opts = {
+				background_colour = "#993366",
+				timeout = 3000,
+			},
+			config = function(_, opts)
+				require("notify").setup(opts)
+				vim.notify = require("notify")
+			end,
+		},
+		{
 			"folke/noice.nvim",
 			event = "VeryLazy",
-			opts = {
-				-- add any options here
-			},
+			opts = {},
 			dependencies = {
-				-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
 				"MunifTanjim/nui.nvim",
-				-- OPTIONAL:
-				--   `nvim-notify` is only needed, if you want to use the notification view.
-				--   If not available, we use `mini` as the fallback
 				"rcarriga/nvim-notify",
 			},
 		},
@@ -377,8 +382,25 @@ require("lazy").setup({
 
 				-- Useful status updates for LSP.
 				-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-				{ "j-hui/fidget.nvim", opts = {} },
-
+				{
+					"j-hui/fidget.nvim",
+					opts = {
+						progress = {
+							display = {
+								progress_style = "NormalFloat",
+								group_style = "NormalFloat",
+								icon_style = "NormalFloat",
+								done_style = "NormalFloat",
+							},
+						},
+						notification = {
+							window = {
+								winblend = 0,
+								normal_hl = "",
+							},
+						},
+					},
+				},
 				-- Allows extra capabilities provided by nvim-cmp
 				"hrsh7th/cmp-nvim-lsp",
 			},
@@ -587,7 +609,6 @@ require("lazy").setup({
 				--
 				--  You can press `g?` for help in this menu.
 				require("mason").setup()
-
 				-- You can add other tools here that you want Mason to install
 				-- for you, so that they are available from within Neovim.
 				local ensure_installed = vim.tbl_keys(servers or {})
@@ -853,24 +874,23 @@ require("lazy").setup({
 	},]]
 		--
 	},
-	{
-		ui = {
-			icons = vim.g.have_nerd_font and {} or {
-				cmd = "⌘",
-				config = "🛠",
-				event = "📅",
-				ft = "📂",
-				init = "⚙",
-				keys = "🗝",
-				plugin = "🔌",
-				runtime = "💻",
-				require = "🌙",
-				source = "📄",
-				start = "🚀",
-				task = "📌",
-				lazy = "💤 ",
-			},
+	ui = {
+		icons = vim.g.have_nerd_font and {} or {
+			cmd = "⌘",
+			config = "🛠",
+			event = "📅",
+			ft = "📂",
+			init = "⚙",
+			keys = "🗝",
+			plugin = "🔌",
+			runtime = "💻",
+			require = "🌙",
+			source = "📄",
+			start = "🚀",
+			task = "📌",
+			lazy = "💤 ",
 		},
+		--backdrop = 100,
 	},
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
@@ -910,4 +930,12 @@ vim.api.nvim_create_autocmd({ "VimLeave" }, {
 		vim.fn.system({ "wezterm", "cli", "set-tab-title", "Wezterm" })
 	end,
 })
-vim.api.nvim_set_hl(0, "Visual", { bg = "#444444" })
+vim.api.nvim_set_hl(0, "Visual", { bg = "#993366", blend = 100 })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+
+-- Fidget-specific highlights
+vim.api.nvim_set_hl(0, "FidgetTitle", { fg = "#eb6f92", bg = "none", bold = true })
+vim.api.nvim_set_hl(0, "FidgetTask", { fg = "#6e6a86", bg = "none" })
+vim.api.nvim_set_hl(0, "FidgetSpinner", { fg = "#9ccfd8", bg = "none" })
+vim.api.nvim_set_hl(0, "FidgetTaskLine", { bg = "none" })
